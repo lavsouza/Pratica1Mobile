@@ -30,3 +30,37 @@ fun ListPage() {
         )
     }
 }
+
+@Composable
+fun CityItem(
+    city: City,
+    onClick: () -> Unit,
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth().padding(8.dp).clickable { onClick() },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            Icons.Rounded.FavoriteBorder,
+            contentDescription = ""
+        )
+        Spacer(modifier = Modifier.size(12.dp))
+        Column(modifier = modifier.weight(1f)) {
+            Text(modifier = Modifier,
+                text = city.name,
+                fontSize = 24.sp)
+            Text(modifier = Modifier,
+                text = city.weather?:"Carregando clima...",
+                fontSize = 16.sp)
+        }
+        IconButton(onClick = onClose) {
+            Icon(Icons.Filled.Close, contentDescription = "Close")
+        }
+    }
+}
+
+private fun getCities() = List(20) { i ->
+    City(name = "Cidade $i", weather = "Carregando clima...")
+}
