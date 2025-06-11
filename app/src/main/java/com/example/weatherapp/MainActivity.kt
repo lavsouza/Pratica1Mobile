@@ -22,10 +22,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.ui.HomePage
 import androidx.compose.material3.Icon
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherapp.ui.nav.BottomNavBar
 import com.example.weatherapp.ui.nav.BottomNavItem
 import com.example.weatherapp.ui.nav.MainNavHost
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import com.example.weatherapp.model.MainViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 
 class MainActivity : ComponentActivity() {
@@ -33,6 +35,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val viewModel: MainViewModel = viewModel()
             val navController = rememberNavController()
             WeatherAppTheme {
                 Scaffold(
@@ -73,7 +76,7 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
-                        MainNavHost(navController = navController)
+                        MainNavHost(navController = navController, viewModel = viewModel)
                     }
                 }
             }
