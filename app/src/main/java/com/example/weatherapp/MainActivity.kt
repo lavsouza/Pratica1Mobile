@@ -22,12 +22,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.ui.HomePage
 import androidx.compose.material3.Icon
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherapp.ui.nav.BottomNavBar
 import com.example.weatherapp.ui.nav.BottomNavItem
 import com.example.weatherapp.ui.nav.MainNavHost
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import com.example.weatherapp.model.MainViewModel
+import com.example.weatherapp.ui.CityDialog
+
 @OptIn(ExperimentalMaterial3Api::class)
 
 class MainActivity : ComponentActivity() {
@@ -37,7 +43,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel: MainViewModel = viewModel()
             val navController = rememberNavController()
+            var showDialog by remember { mutableStateOf(false) }
+
             WeatherAppTheme {
+                if (showDialog) CityDialog(
+                onDismiss = { showDialog = false },
+                onConfirm = { city ->
+                    if (city.isNotBlank()) viewModel.add(city)
+                    showDialog = false
+                })
+
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -70,7 +85,7 @@ class MainActivity : ComponentActivity() {
 
                     floatingActionButton = {
 
-                        FloatingActionButton(onClick = { }) {
+                        FloatingActionButton(onClick = {showDialog = true }) {
                             Icon(Icons.Default.Add, contentDescription = "Adicionar")
                         }
                     }
