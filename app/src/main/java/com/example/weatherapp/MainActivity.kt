@@ -33,6 +33,15 @@ import com.example.weatherapp.ui.nav.MainNavHost
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import com.example.weatherapp.model.MainViewModel
 import com.example.weatherapp.ui.CityDialog
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.compose.currentBackStackEntryAsState
+import android.Manifest
+import com.example.weatherapp.ui.nav.Route
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 
@@ -44,6 +53,10 @@ class MainActivity : ComponentActivity() {
             val viewModel: MainViewModel = viewModel()
             val navController = rememberNavController()
             var showDialog by remember { mutableStateOf(false) }
+            val currentRoute = navController.currentBackStackEntryAsState()
+            val showButton = currentRoute.value?.destination?.hasRoute(Route.List::class) == true
+            val launcher = rememberLauncherForActivityResult(contract =
+                ActivityResultContracts.RequestPermission(), onResult = {} )
 
             WeatherAppTheme {
                 if (showDialog) CityDialog(
@@ -84,13 +97,16 @@ class MainActivity : ComponentActivity() {
                     },
 
                     floatingActionButton = {
-
-                        FloatingActionButton(onClick = {showDialog = true }) {
-                            Icon(Icons.Default.Add, contentDescription = "Adicionar")
+                        if (showButton) {
+                            FloatingActionButton(onClick = { showDialog = true }) {
+                                Icon(Icons.Default.Add, contentDescription = "Adicionar")
+                            }
                         }
                     }
+
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
+                        launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                         MainNavHost(navController = navController, viewModel = viewModel)
                     }
                 }
