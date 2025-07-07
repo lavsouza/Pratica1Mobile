@@ -39,6 +39,8 @@ import android.Manifest
 import com.example.weatherapp.ui.nav.Route
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 
@@ -73,7 +75,9 @@ class MainActivity : ComponentActivity() {
 
                             actions = {
 
-                                IconButton( onClick = { finish() } ) {
+                                IconButton( onClick = {
+                                    Firebase.auth.signOut()
+                                }) {
                                     Icon(
                                         imageVector =
                                             Icons.AutoMirrored.Filled.ExitToApp,
