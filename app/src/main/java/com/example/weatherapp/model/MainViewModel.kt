@@ -80,6 +80,19 @@ class MainViewModel(
         }
     }
 
+    fun loadBitmap(name: String) {
+        val city = _cities[name]
+        service.getBitmap(city?.weather!!.imgUrl) { bitmap ->
+            val newCity = city.copy(
+                weather = city.weather?.copy(
+                    bitmap = bitmap
+                )
+            )
+            _cities.remove(name)
+            _cities[name] = newCity
+        }
+    }
+
 //    fun getCities(): List<City> = List(20) { i ->
 //        City(name = "Cidade $i", weather = "Carregando clima...")
 //    }
