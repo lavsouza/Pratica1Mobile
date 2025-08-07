@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp.api.WeatherService
+import com.example.weatherapp.api.toForecast
 import com.example.weatherapp.api.toWeather
 import com.example.weatherapp.db.fb.FBCity
 import com.example.weatherapp.db.fb.FBDatabase
@@ -17,6 +18,11 @@ class MainViewModel(
     private val db: FBDatabase,
     private val service: WeatherService
 ) : ViewModel(), FBDatabase.Listener {
+
+    private var _city = mutableStateOf<City?>(null)
+    var city: City?
+        get() = _city.value
+        set(tmp) { _city.value = tmp?.copy() }
 
     private val _cities = mutableStateMapOf<String, City>()
     val cities: List<City>
@@ -59,6 +65,15 @@ class MainViewModel(
         }
     }
 
+    fun loadForecast(name: String) {
+        service.getForecast(name) { apiForecast ->
+            val newCity = _cities[name]!!.copy( forecast = apiForecast?.toForecast() )
+            _cities.remove(name)
+            _cities[name] = newCity
+            city = if (city?.name == name) newCity else city
+        }
+    }
+
 //    fun getCities(): List<City> = List(20) { i ->
 //        City(name = "Cidade $i", weather = "Carregando clima...")
 //    }
@@ -78,9 +93,11 @@ class MainViewModel(
     override fun onCityUpdated(city: FBCity) {
         _cities.remove(city.name)
         _cities[city.name!!] = city.toCity()
+        if (_city.value?.name == city.name) { _city.value = city.toCity() }
     }
 
     override fun onCityRemoved(city: FBCity) {
         _cities.remove(city.name)
+        if (_city.value?.name == city.name) { _city.value = null }
     }
 }

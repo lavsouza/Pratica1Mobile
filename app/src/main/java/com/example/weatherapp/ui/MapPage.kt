@@ -3,7 +3,6 @@ package com.example.weatherapp.ui
 import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
@@ -18,11 +17,6 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import android.Manifest
 import androidx.compose.runtime.LaunchedEffect
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
-
 
 
 @Composable

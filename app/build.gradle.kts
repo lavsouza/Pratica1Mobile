@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.coil.compose)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.play.services.maps)
