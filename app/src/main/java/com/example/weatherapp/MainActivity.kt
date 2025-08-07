@@ -37,6 +37,7 @@ import android.Manifest
 import com.example.weatherapp.ui.nav.Route
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.LaunchedEffect
 import com.example.weatherapp.api.WeatherService
 import com.example.weatherapp.db.fb.FBDatabase
 import com.example.weatherapp.model.MainViewModelFactory
@@ -102,8 +103,7 @@ class MainActivity : ComponentActivity() {
 
                             )
 
-                        BottomNavBar(navController = navController, items)
-
+                        BottomNavBar(viewModel, items)
                     },
 
                     floatingActionButton = {
@@ -118,6 +118,17 @@ class MainActivity : ComponentActivity() {
                     Box(modifier = Modifier.padding(innerPadding)) {
                         launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                         MainNavHost(navController = navController, viewModel = viewModel)
+                    }
+                    LaunchedEffect(viewModel.page) {
+                        navController.navigate(viewModel.page) {
+                            navController.graph.startDestinationRoute?.let {
+                                popUpTo(it) {
+                                    saveState = true
+                                }
+                                restoreState = true
+                            }
+                            launchSingleTop = true
+                        }
                     }
                 }
             }
