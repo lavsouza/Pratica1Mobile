@@ -52,7 +52,8 @@ android {
 }
 
 dependencies {
-    implementation(libs.coil.compose)
+    implementation(libs.coil.compose.v250)
+    implementation(libs.picasso)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.play.services.maps)
