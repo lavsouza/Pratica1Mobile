@@ -104,19 +104,19 @@ fun RegisterPage(modifier: Modifier = Modifier) {
         Row(modifier = modifier) {
             Button(
                 onClick = {
-                    Toast.makeText(activity, "Usuário Cadastrado com Sucesso!!", Toast.LENGTH_LONG).show()
-                    activity?.startActivity(
-                        Intent(activity, LoginActivity::class.java).setFlags(
-                            FLAG_ACTIVITY_SINGLE_TOP
-                        )
-                    )
-                    activity?.finish()
                     Firebase.auth.createUserWithEmailAndPassword(email, senha)
                         .addOnCompleteListener(activity!!) { task ->
                             if (task.isSuccessful) {
                                 FBDatabase().register(User(nomeUsuario, email).toFBUser())
                                 Toast.makeText(activity,
                                     "Registro OK!", Toast.LENGTH_LONG).show()
+                                Toast.makeText(activity, "Usuário Cadastrado com Sucesso!!", Toast.LENGTH_LONG).show()
+                                activity.startActivity(
+                                    Intent(activity, LoginActivity::class.java).setFlags(
+                                        FLAG_ACTIVITY_SINGLE_TOP
+                                    )
+                                )
+                                activity.finish()
                             } else {
                                 Toast.makeText(activity,
                                     "Registro FALHOU!", Toast.LENGTH_LONG).show()
