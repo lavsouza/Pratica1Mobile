@@ -17,6 +17,8 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import android.Manifest
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 
@@ -30,16 +32,15 @@ fun MapPage(viewModel: MainViewModel
     val joaopessoa = LatLng(-7.12, -34.84)
     val camPosState = rememberCameraPositionState ()
     val context = LocalContext.current
-    val hasLocationPermission by remember {
-        mutableStateOf(
-            ContextCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED
-        )
-    }
+    val hasLocationPermission = ContextCompat.checkSelfPermission(
+        context,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED
+
     GoogleMap (
-        modifier = Modifier.fillMaxSize(), onMapClick = {
-        viewModel.add("Cidade@${it.latitude}:${it.longitude}", location = it)
+        modifier = Modifier.fillMaxSize(),
+        onMapClick = {
+            viewModel.add("Cidade@${it.latitude}:${it.longitude}", location = it)
         },
         cameraPositionState = camPosState,
         properties = MapProperties(isMyLocationEnabled = hasLocationPermission),
