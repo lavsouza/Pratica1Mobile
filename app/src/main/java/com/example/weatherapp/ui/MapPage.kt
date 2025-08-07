@@ -17,6 +17,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import android.Manifest
+import androidx.compose.runtime.LaunchedEffect
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
@@ -48,9 +49,14 @@ fun MapPage(viewModel: MainViewModel
     ) {
         viewModel.cities.forEach {
         if (it.location != null) {
-            Marker( state = MarkerState(position = it.location),
-                title = it.name, snippet = "${it.location}")
+            LaunchedEffect(it.name) {
+                if (it.weather == null) {
+                    viewModel.loadWeather(it.name)
+                }
             }
+            Marker( state = MarkerState(position = it.location),
+                title = it.name,
+                snippet = it.weather?.desc?:"Carregando...")            }
         }
 
         Marker(
